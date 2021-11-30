@@ -8,5 +8,8 @@ jspm_packages
 # Webpack directories
 .webpack
 
+# DynamoDB directories
+.dynamodb
+
 # Lock's
 yarn.lock
