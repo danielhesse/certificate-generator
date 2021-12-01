@@ -13,3 +13,4 @@ jspm_packages
 
 # Lock's
 yarn.lock
+.env
