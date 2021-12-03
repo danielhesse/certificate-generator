@@ -5,6 +5,7 @@ import fs from "fs"
 import handlebars from "handlebars"
 import dayjs from "dayjs"
 import { APIGatewayProxyHandler } from "aws-lambda"
+import { S3 } from 'aws-sdk'
 
 interface ICreateCertificate {
   id: string;
@@ -75,11 +76,21 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   await browser.close()
 
   // Save S3
+  const s3 = new S3()
+
+  await s3.putObject({
+    Bucket: 'certificate-generator-serverless',
+    Key: `${id}.pdf`,
+    ACL: 'public-read',
+    Body: pdf,
+    ContentType: 'application/pdf'
+  }).promise()
 
   return {
     statusCode: 201,
     body: JSON.stringify({
-      message: 'Certificate created!'
+      message: 'Certificate created!',
+      url: `https://certificate-generator-serverless.s3.amazonaws.com/${id}.pdf`
     }),
     headers: {
       'Content-type': 'application/json'
